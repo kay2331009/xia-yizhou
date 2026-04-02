@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>夏以昼 · 答案之书</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a0a00 0%, #2d1810 30%, #1a0a00 60%, #0d1a2d 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Georgia', 'SimSun', serif;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Ambient glow */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -30%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80vw;
+    height: 60vh;
+    background: radial-gradient(ellipse, rgba(255,180,80,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .title {
+    font-size: 2rem;
+    color: #e8c89a;
+    letter-spacing: 0.4em;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 30px rgba(255,180,80,0.4);
+    font-weight: normal;
+  }
+
+  .book-container {
+    perspective: 1200px;
+    width: 360px;
+    height: 480px;
+    margin-bottom: 2rem;
+  }
+
+  .book {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+  }
+
+  .book.flipped {
+    transform: rotateX(-12deg) rotateY(0deg);
+  }
+
+  .page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px 16px 16px 4px;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  }
+
+  .page-front {
+    background: linear-gradient(150deg, #f5e6c8 0%, #e8d4a8 50%, #dcc88c 100%);
+    transform-origin: left center;
+    border-left: 3px solid #c4a060;
+  }
+
+  .page-back {
+    background: linear-gradient(150deg, #f0ddb8 0%, #e4c89a 50%, #d8b87c 100%);
+    transform: rotateY(180deg);
+    transform-origin: left center;
+    border-right: 3px solid #c4a060;
+  }
+
+  .page-corner {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, transparent 50%, rgba(180,140,60,0.3) 50%);
+    border-radius: 0 0 16px 0;
+  }
+
+  .question-display {
+    font-size: 1.1rem;
+    color: #4a3010;
+    text-align: center;
+    margin-bottom: 2rem;
+    min-height: 3em;
+    padding: 0 1rem;
+    letter-spacing: 0.1em;
+  }
+
+  .answer-display {
+    font-size: 1.4rem;
+    color: #6b3a10;
+    text-align: center;
+    letter-spacing: 0.15em;
+    line-height: 2;
+    display: none;
+    padding: 0 1rem;
+  }
+
+  .input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .input-area.hidden { display: none; }
+
+  .question-input {
+    width: 280px;
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+    border: 2px solid #c4a060;
+    border-radius: 30px;
+    background: rgba(255,255,255,0.7);
+    color: #4a3010;
+    text-align: center;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .question-input::placeholder {
+    color: #a08060;
+    font-style: italic;
+  }
+
+  .question-input:focus {
+    border-color: #e8a030;
+    box-shadow: 0 0 20px rgba(255,180,80,0.3);
+  }
+
+  .ask-btn {
+    padding: 0.7rem 2.5rem;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #c4a060, #a07830);
+    color: #fff8e8;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    letter-spacing: 0.2em;
+    font-family: inherit;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(160,120,48,0.4);
+  }
+
+  .ask-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(160,120,48,0.5);
+  }
+
+  .ask-btn:active {
+    transform: translateY(0);
+  }
+
+  .reset-btn {
+    margin-top: 1.5rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 0.85rem;
+    background: transparent;
+    color: #a08060;
+    border: 1px solid #c4a060;
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.15em;
+    font-family: inherit;
+    transition: all 0.2s;
+    display: none;
+  }
+
+  .reset-btn:hover {
+    background: rgba(196,160,96,0.15);
+    color: #6b3a10;
+  }
+
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: #e8c89a;
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.3); }
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    color: #a08060;
+    letter-spacing: 0.3em;
+    margin-top: 0.5rem;
+    display: none;
+  }
+
+  .subtitle.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<h1 class="title">答案之书</h1>
+
+<div class="book-container">
+  <div class="book" id="book">
+    <!-- Front page: input question -->
+    <div class="page page-front">
+      <div class="input-area" id="inputArea">
+        <textarea class="question-input" id="questionInput" 
+          placeholder="在此输入你的问题…" 
+          rows="2" maxlength="50"></textarea>
+        <button class="ask-btn" id="askBtn">翻 书</button>
+      </div>
+      <div class="question-display" id="questionDisplay"></div>
+      <div class="subtitle" id="subtitle"></div>
+    </div>
+
+    <!-- Back page: answer -->
+    <div class="page page-back">
+      <div class="answer-display" id="answerDisplay"></div>
+      <button class="reset-btn" id="resetBtn">再翻一次</button>
+    </div>
+
+    <div class="page-corner"></div>
+  </div>
+</div>
+
+<script>
+const answers = [
+  "会的。",
+  "不会。",
+  "有可能。",
+  "别想了，不会的。",
+  "答案是肯定的。",
+  "不要怀疑你自己。",
+  "时机未到，再等等。",
+  "这件事值得你去做。",
+  "放弃吧，不值得。",
+  "相信你的直觉。",
+  "事情会往好的方向发展。",
+  "你需要再坚持一下。",
+  "这是个好兆头。",
+  "别急，好事需要时间。",
+  "你会后悔的。",
+  "放手去做吧。",
+  "答案就在你心里。",
+  "不确定，但值得一试。",
+  "很快就会有结果。",
+  "别抱太大期望。",
+  "这会是一次美好的经历。",
+  "你比自己想象的更强。",
+  "保持现状就好。",
+  "是时候做出改变了。",
+  "专心当下，其他的交给时间。",
+  "会有意外惊喜。",
+  "不如换个方向试试。",
+  "这是命中注定的。",
+  "你需要休息一下再想。",
+  "勇敢一点。",
+  "三思而后行。",
+  "今天不适合做决定。",
+  "明天会有答案。",
+  "往积极的方向去想。",
+  "不要犹豫了。",
+  "也许吧，谁知道呢。",
+  "你应该感到庆幸。",
+  "这是一个新的开始。",
+  "耐心等待的人会有好运气。",
+  "有些事，不必追问。",
+  "一切都会过去的。",
+  "你值得拥有更好的。",
+  "暂时还看不清。",
+  "先行动，再调整。",
+  "跟着心走。",
+  "这是你应该做的选择。",
+  "结果会让你满意的。",
+  "不要勉强自己。",
+  "好戏还在后头。",
+];
+
+function getAnswer() {
+  return answers[Math.floor(Math.random() * answers.length)];
+}
+
+function makeSubtitle(q) {
+  const len = q.length;
+  if (len <= 4) return "—— " + q;
+  if (len <= 8) return "—— " + q.substring(0, 4) + "…";
+  return "—— " + q.substring(0, 3) + "…";
+}
+
+// Stars
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 60; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = Math.random() * 100 + '%';
+  s.style.top = Math.random() * 100 + '%';
+  s.style.animationDelay = Math.random() * 3 + 's';
+  s.style.animationDuration = (2 + Math.random() * 3) + 's';
+  starsEl.appendChild(s);
+}
+
+// Elements
+const book = document.getElementById('book');
+const inputArea = document.getElementById('inputArea');
+const questionInput = document.getElementById('questionInput');
+const askBtn = document.getElementById('askBtn');
+const questionDisplay = document.getElementById('questionDisplay');
+const subtitle = document.getElementById('subtitle');
+const answerDisplay = document.getElementById('answerDisplay');
+const resetBtn = document.getElementById('resetBtn');
+
+let currentQuestion = '';
+
+askBtn.addEventListener('click', () => {
+  const q = questionInput.value.trim();
+  if (!q) {
+    questionInput.focus();
+    return;
+  }
+  currentQuestion = q;
+
+  // Display question on front
+  questionDisplay.textContent = q;
+  subtitle.textContent = makeSubtitle(q);
+  subtitle.classList.add('show');
+  inputArea.classList.add('hidden');
+
+  // Set answer on back
+  answerDisplay.textContent = getAnswer();
+
+  // Flip
+  setTimeout(() => {
+    book.classList.add('flipped');
+  }, 300);
+});
+
+resetBtn.addEventListener('click', () => {
+  book.classList.remove('flipped');
+  setTimeout(() => {
+    questionDisplay.textContent = '';
+    subtitle.classList.remove('show');
+    inputArea.classList.remove('hidden');
+    questionInput.value = '';
+    questionInput.focus();
+  }, 400);
+});
+
+// Allow Enter to submit
+questionInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    askBtn.click();
+  }
+});
+</script>
+
+</body>
+</html>
