@@ -535,6 +535,16 @@ questionInput.addEventListener('keydown', (e) => {
     askBtn.click();
   }
 });
+
+// Spacebar to go back to question input
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
+    e.preventDefault();
+    if (resetBtn.classList.contains('show')) {
+      resetBtn.click();
+    }
+  }
+});
 </script>
 
 </body>
