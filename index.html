@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="https://fontsapi.zeoseven.com/256/main/result.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  
+
   body {
     min-height: 100vh;
     background: linear-gradient(135deg, #1a0a00 0%, #2d1810 30%, #1a0a00 60%, #0d1a2d 100%);
@@ -37,18 +37,104 @@
     font-size: 2rem;
     color: #e8c89a;
     letter-spacing: 0.4em;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     text-shadow: 0 0 30px rgba(255,180,80,0.4);
     font-family: 'Huiwen-mincho', 'Noto Serif SC', serif;
     font-weight: normal;
-    font-weight: normal;
+    z-index: 2;
+    position: relative;
   }
 
+  /* ===== MÖBIUS STRIP ===== */
+  .mobius-wrap {
+    position: relative;
+    width: 200px;
+    height: 120px;
+    margin-bottom: 1rem;
+    z-index: 1;
+  }
+
+  .mobius-scene {
+    width: 100%;
+    height: 100%;
+    perspective: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobius {
+    width: 160px;
+    height: 80px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: mobiusRotate 12s linear infinite;
+  }
+
+  @keyframes mobiusRotate {
+    from { transform: rotateX(10deg) rotateZ(0deg); }
+    to   { transform: rotateX(10deg) rotateZ(360deg); }
+  }
+
+  /* Mobius ring - simplified visual using border-radius + 3D */
+  .mobius-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-style: preserve-3d;
+    animation: ringPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes ringPulse {
+    0%, 100% { filter: drop-shadow(0 0 8px rgba(253,203,110,0.4)); }
+    50%       { filter: drop-shadow(0 0 18px rgba(253,203,110,0.7)); }
+  }
+
+  .mobius-ring svg {
+    overflow: visible;
+  }
+
+  /* Paper airplane */
+  .paper-plane {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    transform-style: preserve-3d;
+    animation: flyMobius 6s linear infinite;
+    z-index: 10;
+  }
+
+  .paper-plane svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  }
+
+  /* 
+    Möbius path: plane flies along a figure-8 / infinity loop.
+    We simulate this by moving along X+Y with rotation.
+  */
+  @keyframes flyMobius {
+    0%   { transform: translate(70px, 0px) rotate(0deg); }
+    12%  { transform: translate(50px, -35px) rotate(-30deg); }
+    25%  { transform: translate(0px, -50px) rotate(-90deg); }
+    37%  { transform: translate(-50px, -35px) rotate(-150deg); }
+    50%  { transform: translate(-70px, 0px) rotate(-180deg); }
+    62%  { transform: translate(-50px, 35px) rotate(-210deg); }
+    75%  { transform: translate(0px, 50px) rotate(-270deg); }
+    87%  { transform: translate(50px, 35px) rotate(-330deg); }
+    100% { transform: translate(70px, 0px) rotate(-360deg); }
+  }
+
+  /* ===== BOOK ===== */
   .book-wrap {
     perspective: 1000px;
     width: 360px;
     height: 500px;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    z-index: 2;
   }
 
   .book {
@@ -91,7 +177,6 @@
     z-index: 1;
   }
 
-  /* Decorative page edge lines */
   .page-front::before {
     content: '';
     position: absolute;
@@ -233,7 +318,7 @@
     width: 100%; height: 100%;
     pointer-events: none;
     overflow: hidden;
-    z-index: -1;
+    z-index: 0;
   }
 
   .star {
@@ -264,10 +349,48 @@
 
 <h1 class="title">Caleb 指引你</h1>
 
+<!-- Möbius strip + paper plane -->
+<div class="mobius-wrap">
+  <div class="mobius-scene">
+    <div class="mobius">
+      <!-- Möbius ring SVG -->
+      <div class="mobius-ring">
+        <svg width="160" height="80" viewBox="0 0 160 80">
+          <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#f9ca24" stop-opacity="0.9"/>
+              <stop offset="50%"  stop-color="#e17055" stop-opacity="0.7"/>
+              <stop offset="100%" stop-color="#f9ca24" stop-opacity="0.9"/>
+            </linearGradient>
+          </defs>
+          <!-- Outer Möbius band using ellipse with thick stroke -->
+          <ellipse cx="80" cy="40" rx="75" ry="28"
+            fill="none"
+            stroke="url(#ringGrad)"
+            stroke-width="8"
+            stroke-linecap="round"/>
+          <!-- Inner subtle ellipse for depth -->
+          <ellipse cx="80" cy="40" rx="75" ry="28"
+            fill="none"
+            stroke="rgba(255,220,100,0.15)"
+            stroke-width="14"/>
+        </svg>
+      </div>
+
+      <!-- Paper airplane flying along Möbius -->
+      <div class="paper-plane">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 21L23 12L2 3V10L18 12L2 14V21Z" fill="white" stroke="#e8c89a" stroke-width="0.5"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Book -->
 <div class="book-wrap">
   <div class="book" id="book">
 
-    <!-- Front: input -->
     <div class="page page-front">
       <div class="input-area" id="inputArea">
         <textarea class="question-input" id="questionInput"
@@ -280,7 +403,6 @@
       <div class="subtitle" id="subtitle"></div>
     </div>
 
-    <!-- Back: answer -->
     <div class="page page-back">
       <div class="answer-display" id="answerDisplay"></div>
       <button class="reset-btn" id="resetBtn">再翻一次</button>
@@ -341,6 +463,49 @@ const answers = [
   "结果会让你满意的。",
   "不要勉强自己。",
   "好戏还在后头。",
+  "去试试看吧。",
+  "这件事由你来决定。",
+  "不要太在意别人的看法。",
+  "你需要的是时间。",
+  "好事即将发生。",
+  "不要放弃。",
+  "想想你真正想要的是什么。",
+  "你已经有了答案。",
+  "这件事没那么简单。",
+  "休息一下也无妨。",
+  "这只是一个过程。",
+  "你已经做得很好了。",
+  "别把自己逼得太紧。",
+  "事情会慢慢好起来的。",
+  "你需要换一个思路。",
+  "不要回头看。",
+  "向前走就对了。",
+  "你可以的。",
+  "别担心，会解决的。",
+  "这是你该走的路。",
+  "你比自己以为的更厉害。",
+  "不要想太多。",
+  "答案已经很明显了。",
+  "先接受再改变。",
+  "你不需要向任何人证明。",
+  "这只是一个小插曲。",
+  "好事多磨。",
+  "你需要相信过程。",
+  "答案也许会迟到，但不会缺席。",
+  "不要让恐惧阻止你。",
+  "想想开心的事。",
+  "这一步很关键。",
+  "你会找到办法的。",
+  "生活总会有办法的。",
+  "不要让情绪控制你。",
+  "你拥有比你想象的更多。",
+  "有时候退一步海阔天空。",
+  "该来的总会来。",
+  "不要着急。",
+  "保持平衡。",
+  "这只是暂时的。",
+  "一切都是最好的安排。",
+  "你可以重新开始。",
 ];
 
 function getAnswer() {
@@ -356,8 +521,9 @@ for (let i = 0; i < 80; i++) {
   s.style.top = Math.random() * 100 + '%';
   s.style.animationDelay = Math.random() * 3 + 's';
   s.style.animationDuration = (2 + Math.random() * 3) + 's';
-  s.style.width = (1 + Math.random() * 2) + 'px';
-  s.style.height = s.style.width;
+  const size = 1 + Math.random() * 2;
+  s.style.width = size + 'px';
+  s.style.height = size + 'px';
   starsEl.appendChild(s);
 }
 
@@ -375,23 +541,19 @@ askBtn.addEventListener('click', () => {
   const q = questionInput.value.trim();
   if (!q) { questionInput.focus(); return; }
 
-  // Show question on front
   questionDisplay.textContent = '— ' + q + ' —';
   subtitle.textContent = '来自答案之书的回应';
   subtitle.classList.add('show');
   questionDisplay.classList.add('show');
   inputArea.classList.add('hidden');
 
-  // Set answer on back
   answerDisplay.textContent = getAnswer();
   answerDisplay.classList.remove('show');
 
-  // Flip
   setTimeout(() => {
     book.classList.add('flipped');
   }, 200);
 
-  // Show answer after flip
   setTimeout(() => {
     answerDisplay.classList.add('show');
     resetBtn.classList.add('show');
