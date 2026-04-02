@@ -268,7 +268,20 @@
 
   .answer-display.show { opacity: 1; }
 
-  .reset-btn {
+  .caleb-note {
+    font-size: 0.8rem;
+    color: rgba(160, 120, 70, 0.65);
+    letter-spacing: 0.12em;
+    margin-top: 0.8rem;
+    font-style: italic;
+    opacity: 0;
+    transition: opacity 0.6s ease 1s;
+    text-align: center;
+    min-height: 1.2em;
+    display: none;
+  }
+
+  .caleb-note.show { display: block; opacity: 1; }
     margin-top: 2rem;
     padding: 0.5rem 1.5rem;
     font-size: 0.85rem;
@@ -416,6 +429,7 @@
     line-height: 1.6;
     animation: fadeUp 0.3s ease forwards;
     opacity: 0;
+    cursor: default;
   }
 </style>
 </head>
@@ -469,6 +483,7 @@
 
     <div class="page page-back">
       <div class="answer-display" id="answerDisplay"></div>
+      <div class="caleb-note" id="calebNote"></div>
       <button class="reset-btn" id="resetBtn">再翻一次</button>
     </div>
 
@@ -576,6 +591,101 @@ function getAnswer() {
   return answers[Math.floor(Math.random() * answers.length)];
 }
 
+const calebNotes = [
+  "嗯…我听到了。",
+  "不是这样的。",
+  "嗯…也许吧。",
+  "别再想了，真的。",
+  "是这样的，没错。",
+  "你知道的，你一直都知道。",
+  "再等等…会来的。",
+  "去吧，值得的。",
+  "…算了，不值得。",
+  "跟着感觉走。",
+  "嗯…会好的。",
+  "再撑一下。",
+  "啊…好兆头。",
+  "不急，慢慢来。",
+  "你会后悔这个选择。",
+  "去做吧，我支持你。",
+  "答案一直在你心里。",
+  "试试看也无妨。",
+  "很快就会有答案的。",
+  "…期望别太高。",
+  "这段经历会很美的。",
+  "你比自己以为的更勇敢。",
+  "就这样吧，刚刚好。",
+  "嗯…时候到了。",
+  "专注于此刻，其他先放下。",
+  "会有惊喜等着你。",
+  "也许换个角度更好。",
+  "命中注定的事…躲不掉的。",
+  "先睡一觉再说。",
+  "…深呼吸，一下就好。",
+  "三思而后行…记住这句话。",
+  "今天先不要做决定。",
+  "明天再说。",
+  "往好的方向看。",
+  "别犹豫了，去吧。",
+  "谁知道呢，也许吧。",
+  "你应该为自己感到高兴。",
+  "新的开始…嗯。",
+  "等一等的人，会有好运的。",
+  "有些事…不用问的。",
+  "一切都会过去的，真的。",
+  "你值得更好的。",
+  "现在还看不清…再等等。",
+  "先动起来。",
+  "跟着心走就好。",
+  "…是你该做的选择。",
+  "你会满意的。",
+  "不要勉强自己。",
+  "好戏…还在后头呢。",
+  "去试试看。",
+  "这是你的人生，你来决定。",
+  "别人的看法…不重要。",
+  "给自己一点时间。",
+  "好事…快要来了。",
+  "不要放弃。",
+  "好好想想你真正要的是什么。",
+  "你心里已经有答案了。",
+  "…没那么简单。",
+  "休息一下也好。",
+  "这只是过程的一部分。",
+  "你已经做得很好了。",
+  "别把自己逼太紧。",
+  "慢慢会好起来的。",
+  "换一条路试试。",
+  "别回头了。",
+  "向前走就好。",
+  "…你可以的。",
+  "别担心，会解决的。",
+  "这是你该走的路。",
+  "你比自己以为的更厉害。",
+  "…别想太多了。",
+  "答案…已经很明显了。",
+  "先接受，然后改变。",
+  "不需要向任何人证明什么。",
+  "这只是一个小插曲。",
+  "好事多磨…对的。",
+  "相信过程。",
+  "答案会来的，只是迟到而已。",
+  "别让恐惧阻止你。",
+  "想想那些让你开心的事。",
+  "这一步很关键。",
+  "你会找到办法的。",
+  "生活…总会有办法的。",
+  "别让情绪带你走。",
+  "你拥有的比你以为的更多。",
+  "有时候…退一步也好。",
+  "该来的会来的。",
+  "不着急。",
+  "保持平衡。",
+  "这只是暂时的。",
+  "一切都是最好的安排。",
+  "重新开始…永远都可以的。",
+];
+
 // Stars
 const starsEl = document.getElementById('stars');
 for (let i = 0; i < 80; i++) {
@@ -601,9 +711,13 @@ const subtitle = document.getElementById('subtitle');
 const answerDisplay = document.getElementById('answerDisplay');
 const resetBtn = document.getElementById('resetBtn');
 
+let lastAnswerIdx = 0;
+
 askBtn.addEventListener('click', () => {
   const q = questionInput.value.trim();
   if (!q) { questionInput.focus(); return; }
+
+  lastAnswerIdx = Math.floor(Math.random() * answers.length);
 
   questionDisplay.textContent = '— ' + q + ' —';
   subtitle.textContent = '来自答案之书的回应';
@@ -611,8 +725,9 @@ askBtn.addEventListener('click', () => {
   questionDisplay.classList.add('show');
   inputArea.classList.add('hidden');
 
-  answerDisplay.textContent = getAnswer();
+  answerDisplay.textContent = answers[lastAnswerIdx];
   answerDisplay.classList.remove('show');
+  calebNote.classList.remove('show');
 
   setTimeout(() => {
     book.classList.add('flipped');
@@ -620,12 +735,15 @@ askBtn.addEventListener('click', () => {
 
   setTimeout(() => {
     answerDisplay.classList.add('show');
+    calebNote.textContent = calebNotes[lastAnswerIdx];
+    calebNote.classList.add('show');
     resetBtn.classList.add('show');
   }, 800);
 });
 
 resetBtn.addEventListener('click', () => {
   answerDisplay.classList.remove('show');
+  calebNote.classList.remove('show');
   resetBtn.classList.remove('show');
   book.classList.remove('flipped');
   setTimeout(() => {
@@ -664,13 +782,13 @@ const overviewClose = document.getElementById('overviewClose');
 const overviewGrid = document.getElementById('overviewGrid');
 
 overviewBtn.addEventListener('click', () => {
-  // Populate answers
+  // Populate answers with Caleb notes
   overviewGrid.innerHTML = '';
   answers.forEach((ans, i) => {
     const item = document.createElement('div');
     item.className = 'overview-item';
-    item.textContent = ans;
-    item.style.animationDelay = (i * 15) + 'ms';
+    item.innerHTML = `<div style="font-size:0.9rem;letter-spacing:0.1em;margin-bottom:0.3rem">${ans}</div><div style="font-size:0.65rem;color:rgba(160,120,70,0.55);font-style:italic;letter-spacing:0.05em">${calebNotes[i]}</div>`;
+    item.style.animationDelay = (i * 12) + 'ms';
     overviewGrid.appendChild(item);
   });
   overviewOverlay.classList.add('show');
