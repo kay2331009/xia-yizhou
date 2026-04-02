@@ -532,7 +532,10 @@ resetBtn.addEventListener('click', () => {
 questionInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    askBtn.click();
+    // If showing answer, Enter goes back; otherwise submit question
+    if (resetBtn.classList.contains('show')) {
+      resetBtn.click();
+    }
   }
 });
 
