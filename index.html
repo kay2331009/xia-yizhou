@@ -45,87 +45,55 @@
     position: relative;
   }
 
-  /* ===== MÖBIUS STRIP ===== */
+  /* ===== MÖBIUS / INFINITY ===== */
   .mobius-wrap {
     position: relative;
     width: 200px;
     height: 120px;
     margin-bottom: 1rem;
     z-index: 1;
-  }
-
-  .mobius-scene {
-    width: 100%;
-    height: 100%;
-    perspective: 800px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .mobius {
-    width: 160px;
-    height: 80px;
-    position: relative;
-    transform-style: preserve-3d;
-    animation: mobiusRotate 12s linear infinite;
+  .infinity-symbol {
+    font-size: 4.5rem;
+    color: rgba(253, 203, 110, 0.25);
+    user-select: none;
+    line-height: 1;
+    animation: infinityPulse 3s ease-in-out infinite;
   }
 
-  @keyframes mobiusRotate {
-    from { transform: rotateX(10deg) rotateZ(0deg); }
-    to   { transform: rotateX(10deg) rotateZ(360deg); }
+  @keyframes infinityPulse {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50%       { opacity: 0.35; transform: scale(1.05); }
   }
 
-  /* Mobius ring - simplified visual using border-radius + 3D */
-  .mobius-ring {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-style: preserve-3d;
-    animation: ringPulse 3s ease-in-out infinite;
-  }
-
-  @keyframes ringPulse {
-    0%, 100% { filter: drop-shadow(0 0 8px rgba(253,203,110,0.4)); }
-    50%       { filter: drop-shadow(0 0 18px rgba(253,203,110,0.7)); }
-  }
-
-  .mobius-ring svg {
-    overflow: visible;
-  }
-
-  /* Paper airplane */
+  /* Paper airplane flying in figure-8 around the ∞ symbol */
   .paper-plane {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    transform-style: preserve-3d;
-    animation: flyMobius 6s linear infinite;
-    z-index: 10;
+    width: 18px;
+    height: 18px;
+    animation: flyFigure8 6s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
   }
 
   .paper-plane svg {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
   }
 
-  /* 
-    Möbius path: plane flies along a figure-8 / infinity loop.
-    We simulate this by moving along X+Y with rotation.
-  */
-  @keyframes flyMobius {
-    0%   { transform: translate(70px, 0px) rotate(0deg); }
-    12%  { transform: translate(50px, -35px) rotate(-30deg); }
-    25%  { transform: translate(0px, -50px) rotate(-90deg); }
-    37%  { transform: translate(-50px, -35px) rotate(-150deg); }
-    50%  { transform: translate(-70px, 0px) rotate(-180deg); }
-    62%  { transform: translate(-50px, 35px) rotate(-210deg); }
-    75%  { transform: translate(0px, 50px) rotate(-270deg); }
-    87%  { transform: translate(50px, 35px) rotate(-330deg); }
-    100% { transform: translate(70px, 0px) rotate(-360deg); }
+  @keyframes flyFigure8 {
+    0%   { transform: translate(75px, 0px) rotate(0deg); }
+    12%  { transform: translate(55px, -38px) rotate(-35deg); }
+    25%  { transform: translate(0px, -55px) rotate(-90deg); }
+    37%  { transform: translate(-55px, -38px) rotate(-145deg); }
+    50%  { transform: translate(-75px, 0px) rotate(-180deg); }
+    62%  { transform: translate(-55px, 38px) rotate(-235deg); }
+    75%  { transform: translate(0px, 55px) rotate(-270deg); }
+    87%  { transform: translate(55px, 38px) rotate(-325deg); }
+    100% { transform: translate(75px, 0px) rotate(-360deg); }
   }
 
   /* ===== BOOK ===== */
@@ -349,41 +317,13 @@
 
 <h1 class="title">Caleb 指引你</h1>
 
-<!-- Möbius strip + paper plane -->
+<!-- Möbius / Infinity symbol -->
 <div class="mobius-wrap">
-  <div class="mobius-scene">
-    <div class="mobius">
-      <!-- Möbius ring SVG -->
-      <div class="mobius-ring">
-        <svg width="160" height="80" viewBox="0 0 160 80">
-          <defs>
-            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%"   stop-color="#f9ca24" stop-opacity="0.9"/>
-              <stop offset="50%"  stop-color="#e17055" stop-opacity="0.7"/>
-              <stop offset="100%" stop-color="#f9ca24" stop-opacity="0.9"/>
-            </linearGradient>
-          </defs>
-          <!-- Outer Möbius band using ellipse with thick stroke -->
-          <ellipse cx="80" cy="40" rx="75" ry="28"
-            fill="none"
-            stroke="url(#ringGrad)"
-            stroke-width="8"
-            stroke-linecap="round"/>
-          <!-- Inner subtle ellipse for depth -->
-          <ellipse cx="80" cy="40" rx="75" ry="28"
-            fill="none"
-            stroke="rgba(255,220,100,0.15)"
-            stroke-width="14"/>
-        </svg>
-      </div>
-
-      <!-- Paper airplane flying along Möbius -->
-      <div class="paper-plane">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M2 21L23 12L2 3V10L18 12L2 14V21Z" fill="white" stroke="#e8c89a" stroke-width="0.5"/>
-        </svg>
-      </div>
-    </div>
+  <div class="infinity-symbol">♾️</div>
+  <div class="paper-plane">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 21L23 12L2 3V10L18 12L2 14V21Z" fill="white" stroke="rgba(232,200,154,0.6)" stroke-width="0.5"/>
+    </svg>
   </div>
 </div>
 
