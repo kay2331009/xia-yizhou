@@ -11,7 +11,7 @@
 
   body {
     min-height: 100vh;
-    background: linear-gradient(135deg, #1a0a00 0%, #2d1810 30%, #1a0a00 60%, #0d1a2d 100%);
+    background: linear-gradient(135deg, #1a0a00 0%, #2d1810 50%, #1a0a00 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -58,16 +58,19 @@
   }
 
   .infinity-symbol {
-    font-size: 4.5rem;
-    color: rgba(253, 203, 110, 0.25);
-    user-select: none;
-    line-height: 1;
+    width: 120px;
+    height: 80px;
     animation: infinityPulse 3s ease-in-out infinite;
+  }
+
+  .infinity-symbol svg {
+    width: 100%;
+    height: 100%;
   }
 
   @keyframes infinityPulse {
     0%, 100% { opacity: 0.2; transform: scale(1); }
-    50%       { opacity: 0.35; transform: scale(1.05); }
+    50%       { opacity: 0.35; transform: scale(1.03); }
   }
 
   /* Paper airplane flying in figure-8 around the ∞ symbol */
@@ -317,9 +320,15 @@
 
 <h1 class="title">Caleb 指引你</h1>
 
-<!-- Möbius / Infinity symbol -->
+<!-- Möbius / Infinity symbol (line art) -->
 <div class="mobius-wrap">
-  <div class="infinity-symbol">♾️</div>
+  <div class="infinity-symbol">
+    <svg viewBox="0 0 120 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Two interlocking circles forming infinity symbol -->
+      <circle cx="35" cy="40" r="28" stroke="#e8c89a" stroke-width="2" opacity="0.6"/>
+      <circle cx="85" cy="40" r="28" stroke="#e8c89a" stroke-width="2" opacity="0.6"/>
+    </svg>
+  </div>
   <div class="paper-plane">
     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M2 21L23 12L2 3V10L18 12L2 14V21Z" fill="white" stroke="rgba(232,200,154,0.6)" stroke-width="0.5"/>
