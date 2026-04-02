@@ -590,67 +590,105 @@ function getAnswer() {
   return answers[Math.floor(Math.random() * answers.length)];
 }
 
-// 随机组合轻声自语
-const calebPrefixes = [
-  "…嗯…",
-  "…",
-  "…也许…",
-  "…谁知道呢…",
-  "…不过…",
-  "…但是…",
-  "…哎…",
-  "…嘛…",
+const calebNotes = [
+  "事情往往不是你想的那样。",
+  "你站在这里，已经说明了一些事。",
+  "有些路走过了才知道值不值。",
+  "直觉比思考诚实。",
+  "有些事不需要问为什么。",
+  "路走着走着就清楚了。",
+  "犹豫的时候，心里已经有答案了。",
+  "恐惧只是恐惧，不是事实。",
+  "有些选择没有对错之分。",
+  "你拥有的比你以为的多。",
+  "过程本身就是答案的一部分。",
+  "后悔也改变不了什么。",
+  "时间会给你答案的。",
+  "答案往往比你以为的简单。",
+  "好事需要时间。",
+  "你比自己以为的更稳。",
+  "有些事想是想不通的。",
+  "答案一直都在。",
+  "惊喜往往在意料之外。",
+  "别人的看法是别人的事。",
+  "但先把手里的顾好。",
+  "别骗自己。",
+  "别忘了为什么开始。",
+  "做就是了，想太多反而难。",
+  "有些事是真的，有些不是。",
+  "但你值得知道真相。",
+  "你比你以为的更清醒。",
+  "有些结束是新的开始。",
+  "你比自己以为的更自由。",
+  "生活不是等来的。",
+  "有些东西放下了才会来。",
+  "你已经走了很远了。",
+  "你比你自己以为的更勇敢。",
+  "有些事，想法和感受不一样。",
+  "但直觉往往是对的。",
+  "你拥有的已经够好了。",
+  "有些答案是你不想听到的。",
+  "但听到了也没关系。",
+  "你不需要向谁交代。",
+  "有些路，只有走过了才明白。",
+  "但每一段都有意义。",
+  "你比你以为的更值得被爱。",
+  "有些东西失去了才知道重要。",
+  "但失去也是一种答案。",
+  "你已经做得很好了。",
+  "有些事不是你能控制的。",
+  "接受它，然后继续。",
+  "你比你以为的更有韧性。",
+  "有些事只有时间能解答。",
+  "但你先要愿意等。",
+  "你比自己以为的更清醒。",
+  "有些路不是非走不可的。",
+  "但既然选了，就走下去。",
+  "你已经在这里了，这就是答案。",
+  "有些问题没有答案本身就是答案。",
+  "但你知道答案在哪里。",
+  "你比你以为的更幸运。",
+  "有些选择做了就不要回头。",
+  "你拥有的已经足够。",
+  "但先把手边的事做好。",
+  "你比你以为的更成熟。",
+  "有些话不说也罢。",
+  "但说了就要承担。",
+  "你已经比昨天的自己更好了。",
+  "有些事急不来。",
+  "但该做的时候别犹豫。",
+  "你比自己以为的更稳。",
+  "有些东西是抓不住的。",
+  "但抓得住的要好好珍惜。",
+  "你已经做了你能做的。",
+  "有些路不适合回头看。",
+  "但停下来想一想也好。",
+  "你比你以为的更值得。",
+  "有些结束是好的。",
+  "但开始也需要勇气。",
+  "你已经走在路上了。",
+  "有些答案你早就知道了。",
+  "只是不想承认。",
+  "但承认了反而轻松。",
+  "你比你以为的更真实。",
+  "有些事没有对错，只有选择。",
+  "但选择就要承担后果。",
+  "你已经承担了。",
+  "有些痛是成长的代价。",
+  "但痛过之后会更清醒。",
+  "你比自己以为的更完整。",
+  "有些路注定是一个人走的。",
+  "但不是每条路都是。",
+  "你已经找到了陪伴的人。",
+  "有些东西失去了就是失去了。",
+  "但失去不等于一无所有。",
+  "你已经得到了很多。",
+  "有些事想太多反而是负担。",
+  "做一件小事就好。",
+  "你比你以为的更轻松。",
+  "有些答案不需要想。",
+  "只需要去做。",
 ];
-
-const calebObservations = [
-  "事情往往不是你想的那样",
-  "你站在这里，已经说明了一些事",
-  "有些路走过了才知道",
-  "直觉有时候比思考诚实",
-  "有些事没有为什么",
-  "路走着走着就清楚了",
-  "犹豫的时候，心里其实已经有答案了",
-  "恐惧只是恐惧，不是事实",
-  "有些选择没有对错",
-  "你拥有的比你以为的多",
-  "过程本身就是答案的一部分",
-  "后悔也改变不了什么",
-  "时间会给你答案的",
-  "答案往往比你以为的简单",
-  "好事需要时间",
-  "你比自己以为的更稳",
-  "有些事想是想不通的",
-  "答案一直都在",
-  "惊喜往往在意料之外",
-  "别人的看法是别人的事",
-];
-
-const calebMoodBits = [
-  "不着急",
-  "慢慢来",
-  "深呼吸",
-  "别骗自己",
-  "别忘了为什么开始",
-  "但别想太多",
-  "就是这样",
-  "嗯",
-  "",
-  "",
-  "",
-];
-
-function getCalebNote() {
-  const p = calebPrefixes[Math.floor(Math.random() * calebPrefixes.length)];
-  const o = calebObservations[Math.floor(Math.random() * calebObservations.length)];
-  const m = calebMoodBits[Math.floor(Math.random() * calebMoodBits.length)];
-  if (m === "") {
-    return p + o + "。";
-  }
-  return p + o + "，" + m + "。";
-}
-
-// Pre-generate all 100 notes for the overview
-const calebNotes = Array.from({length: 100}, getCalebNote);
 
 // Stars
 const starsEl = document.getElementById('stars');
@@ -687,8 +725,8 @@ askBtn.addEventListener('click', () => {
   questionDisplay.classList.add('show');
   inputArea.classList.add('hidden');
 
-  const answer = answers[Math.floor(Math.random() * answers.length)];
-  answerDisplay.textContent = answer;
+  const idx = Math.floor(Math.random() * answers.length);
+  answerDisplay.textContent = answers[idx];
   answerDisplay.classList.remove('show');
   calebNote.classList.remove('show');
 
@@ -698,7 +736,7 @@ askBtn.addEventListener('click', () => {
 
   setTimeout(() => {
     answerDisplay.classList.add('show');
-    calebNote.textContent = getCalebNote();
+    calebNote.textContent = calebNotes[idx];
     calebNote.classList.add('show');
   }, 800);
 });
