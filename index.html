@@ -484,7 +484,6 @@
     <div class="page page-back">
       <div class="answer-display" id="answerDisplay"></div>
       <div class="caleb-note" id="calebNote"></div>
-      <button class="reset-btn" id="resetBtn">再翻一次</button>
     </div>
 
     <div class="page-corner"></div>
@@ -709,7 +708,7 @@ const askBtn = document.getElementById('askBtn');
 const questionDisplay = document.getElementById('questionDisplay');
 const subtitle = document.getElementById('subtitle');
 const answerDisplay = document.getElementById('answerDisplay');
-const resetBtn = document.getElementById('resetBtn');
+const calebNote = document.getElementById('calebNote');
 
 let lastAnswerIdx = 0;
 
@@ -737,31 +736,13 @@ askBtn.addEventListener('click', () => {
     answerDisplay.classList.add('show');
     calebNote.textContent = calebNotes[lastAnswerIdx];
     calebNote.classList.add('show');
-    resetBtn.classList.add('show');
   }, 800);
-});
-
-resetBtn.addEventListener('click', () => {
-  answerDisplay.classList.remove('show');
-  calebNote.classList.remove('show');
-  resetBtn.classList.remove('show');
-  book.classList.remove('flipped');
-  setTimeout(() => {
-    questionDisplay.classList.remove('show');
-    subtitle.classList.remove('show');
-    inputArea.classList.remove('hidden');
-    questionInput.value = '';
-    questionInput.focus();
-  }, 400);
 });
 
 questionInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    // If showing answer, Enter goes back; otherwise submit question
-    if (resetBtn.classList.contains('show')) {
-      resetBtn.click();
-    }
+    askBtn.click();
   }
 });
 
@@ -769,8 +750,17 @@ questionInput.addEventListener('keydown', (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space' && !e.target.matches('input, textarea, button')) {
     e.preventDefault();
-    if (resetBtn.classList.contains('show')) {
-      resetBtn.click();
+    if (book.classList.contains('flipped')) {
+      book.classList.remove('flipped');
+      setTimeout(() => {
+        questionDisplay.classList.remove('show');
+        subtitle.classList.remove('show');
+        inputArea.classList.remove('hidden');
+        questionInput.value = '';
+        questionInput.focus();
+        answerDisplay.classList.remove('show');
+        calebNote.classList.remove('show');
+      }, 400);
     }
   }
 });
