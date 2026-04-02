@@ -313,11 +313,109 @@
     50% { opacity: 0.8; }
   }
 
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   .hint {
     font-size: 0.7rem;
     color: #8a7050;
     letter-spacing: 0.15em;
     margin-top: 1rem;
+  }
+
+  /* 总览按钮 */
+  .overview-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    padding: 0.45rem 1rem;
+    font-size: 0.75rem;
+    background: rgba(196, 160, 96, 0.12);
+    color: #c4a060;
+    border: 1px solid rgba(196, 160, 96, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+    letter-spacing: 0.15em;
+    font-family: inherit;
+    transition: all 0.2s;
+    z-index: 100;
+  }
+
+  .overview-btn:hover {
+    background: rgba(196, 160, 96, 0.2);
+    color: #e8c89a;
+  }
+
+  /* 总览弹窗 */
+  .overview-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 8, 2, 0.92);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 3rem 1rem;
+  }
+
+  .overview-overlay.show {
+    display: block;
+  }
+
+  .overview-close {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    background: rgba(196, 160, 96, 0.12);
+    border: 1px solid rgba(196, 160, 96, 0.3);
+    border-radius: 50%;
+    color: #c4a060;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 201;
+  }
+
+  .overview-close:hover {
+    background: rgba(196, 160, 96, 0.2);
+    color: #e8c89a;
+  }
+
+  .overview-title {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #e8c89a;
+    letter-spacing: 0.3em;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 20px rgba(255, 180, 80, 0.3);
+  }
+
+  .overview-grid {
+    max-width: 600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.6rem;
+  }
+
+  .overview-item {
+    background: rgba(245, 230, 200, 0.08);
+    border: 1px solid rgba(196, 160, 96, 0.2);
+    border-radius: 8px;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.85rem;
+    color: #d4c4a0;
+    letter-spacing: 0.1em;
+    text-align: center;
+    line-height: 1.6;
+    animation: fadeUp 0.3s ease forwards;
+    opacity: 0;
   }
 </style>
 </head>
@@ -326,6 +424,16 @@
 <div class="stars" id="stars"></div>
 
 <h1 class="title">Caleb 指引你</h1>
+
+<!-- 总览按钮 -->
+<button class="overview-btn" id="overviewBtn">总览</button>
+
+<!-- 总览弹窗 -->
+<div class="overview-overlay" id="overviewOverlay">
+  <button class="overview-close" id="overviewClose">×</button>
+  <h2 class="overview-title">— 所有答案 —</h2>
+  <div class="overview-grid" id="overviewGrid"></div>
+</div>
 
 <!-- Möbius / Infinity symbol (line art) -->
 <div class="mobius-wrap">
@@ -546,6 +654,38 @@ document.addEventListener('keydown', (e) => {
     if (resetBtn.classList.contains('show')) {
       resetBtn.click();
     }
+  }
+});
+
+// 总览功能
+const overviewBtn = document.getElementById('overviewBtn');
+const overviewOverlay = document.getElementById('overviewOverlay');
+const overviewClose = document.getElementById('overviewClose');
+const overviewGrid = document.getElementById('overviewGrid');
+
+overviewBtn.addEventListener('click', () => {
+  // Populate answers
+  overviewGrid.innerHTML = '';
+  answers.forEach((ans, i) => {
+    const item = document.createElement('div');
+    item.className = 'overview-item';
+    item.textContent = ans;
+    item.style.animationDelay = (i * 15) + 'ms';
+    overviewGrid.appendChild(item);
+  });
+  overviewOverlay.classList.add('show');
+  overviewBtn.style.display = 'none';
+});
+
+overviewClose.addEventListener('click', () => {
+  overviewOverlay.classList.remove('show');
+  overviewBtn.style.display = '';
+});
+
+overviewOverlay.addEventListener('click', (e) => {
+  if (e.target === overviewOverlay) {
+    overviewOverlay.classList.remove('show');
+    overviewBtn.style.display = '';
   }
 });
 </script>
