@@ -590,100 +590,67 @@ function getAnswer() {
   return answers[Math.floor(Math.random() * answers.length)];
 }
 
-const calebNotes = [
-  "…嗯，但这不是全部。",
-  "…事情往往不是你想的那样。",
-  "…也许吧，谁知道明天会怎样呢。",
-  "…别想了，想多了反而看不清。",
-  "…嗯，但别忘了你为什么开始。",
-  "…你站在这里，已经说明了一些事。",
-  "…嗯，时间会给你答案的。",
-  "…有些路，走过了才知道值不值。",
-  "…嗯，值不值得只有你知道。",
-  "…直觉有时候比思考诚实。",
-  "…嗯，会好的，会好的。",
-  "…再撑一下，答案就在前面。",
-  "…嗯，有些兆头是对的。",
-  "…嗯，好事需要时间。",
-  "…后悔又怎样呢，你还是你。",
-  "…去吧，有些事想是 想不通的。",
-  "…嗯，答案一直都在。",
-  "…嗯，试了才知道。",
-  "…快了，差不多了。",
-  "…嗯，期望低一点不是坏事。",
-  "…这段路，会成为故事的。",
-  "…嗯，你比你以为的更稳。",
-  "…嗯，刚刚好，刚刚好。",
-  "…嗯，是时候了。",
-  "…此刻就够了，其他不重要。",
-  "…嗯，惊喜往往在意料之外。",
-  "…嗯，换个方向也不一定是错的。",
-  "…嗯，有些事是注定的。",
-  "…嗯，睡一觉也许就想通了。",
-  "…深呼吸，放松一下。",
-  "…三思，但别想太久。",
-  "…嗯，今天不是好日子。",
-  "…嗯，明天也许就是了。",
-  "…往好的方向看…但别骗自己。",
-  "…犹豫的时候，其实心里已经有答案了。",
-  "…谁知道呢。",
-  "…你应该为自己骄傲的。",
-  "…嗯，新的开始。",
-  "…嗯，愿意等的人值得好东西。",
-  "…有些事不需要问的。",
-  "…嗯，会过去的。",
-  "…嗯，你值得更好的，但先把手里的顾好。",
-  "…看不清的时候，走一步看一步。",
-  "…先动起来，在动里找方向。",
-  "…嗯，跟着心走，但别忘了带脑子。",
-  "…嗯，是你的选择。",
-  "…你会满意的，但不是因为结果。",
-  "…嗯，不要勉强自己。",
-  "…好戏还在后头呢，耐心一点。",
-  "…嗯，去试试看。",
-  "…你的人生，你说了算。",
-  "…别人的看法是别人的事。",
-  "…给自己一点时间，不着急。",
-  "…嗯，好事快来了。",
-  "…别放弃，路还长呢。",
-  "…嗯，好好想想真的要什么。",
-  "…你心里其实早就有答案了。",
-  "…嗯，没那么简单，但也不难。",
-  "…休息一下，世界不会因此停的。",
-  "…这只是故事的一个章节。",
-  "…嗯，你已经做得很好了。",
-  "…别把自己逼太紧。",
-  "…嗯，慢慢来，比较快。",
-  "…换条路，也许风景不一样。",
-  "…别回头看了。",
-  "…向前走吧。",
-  "…嗯，你可以的。",
-  "…别担心，事情总有办法的。",
-  "…嗯，这是你该走的路。",
-  "…你比自己以为的更厉害。",
-  "…别想太多，做就是了。",
-  "…嗯，答案其实很简单。",
-  "…先接受，再改变。",
-  "…嗯，不需要证明给任何人看。",
-  "…这只是个小插曲。",
-  "…嗯，好事多磨。",
-  "…过程本身就是答案。",
-  "…答案只是迟到，不是不到。",
-  "…恐惧只是恐惧，不是事实。",
-  "…嗯，想想那些让你感到活着的事。",
-  "…这一步很关键。",
-  "…嗯，你会有办法的。",
-  "…生活总会找到路的。",
-  "…别让情绪替你做决定。",
-  "…嗯，你拥有的比你以为的多。",
-  "…有时候退一步，是为了跳得更远。",
-  "…该来的会来。",
-  "…嗯，不着急。",
-  "…嗯，保持平衡。",
-  "…这只是暂时的。",
-  "…嗯，一切都是最好的安排。",
-  "重新开始，什么时候都不晚。",
+// 随机组合轻声自语
+const calebPrefixes = [
+  "…嗯…",
+  "…",
+  "…也许…",
+  "…谁知道呢…",
+  "…不过…",
+  "…但是…",
+  "…哎…",
+  "…嘛…",
 ];
+
+const calebObservations = [
+  "事情往往不是你想的那样",
+  "你站在这里，已经说明了一些事",
+  "有些路走过了才知道",
+  "直觉有时候比思考诚实",
+  "有些事没有为什么",
+  "路走着走着就清楚了",
+  "犹豫的时候，心里其实已经有答案了",
+  "恐惧只是恐惧，不是事实",
+  "有些选择没有对错",
+  "你拥有的比你以为的多",
+  "过程本身就是答案的一部分",
+  "后悔也改变不了什么",
+  "时间会给你答案的",
+  "答案往往比你以为的简单",
+  "好事需要时间",
+  "你比自己以为的更稳",
+  "有些事想是想不通的",
+  "答案一直都在",
+  "惊喜往往在意料之外",
+  "别人的看法是别人的事",
+];
+
+const calebMoodBits = [
+  "不着急",
+  "慢慢来",
+  "深呼吸",
+  "别骗自己",
+  "别忘了为什么开始",
+  "但别想太多",
+  "就是这样",
+  "嗯",
+  "",
+  "",
+  "",
+];
+
+function getCalebNote() {
+  const p = calebPrefixes[Math.floor(Math.random() * calebPrefixes.length)];
+  const o = calebObservations[Math.floor(Math.random() * calebObservations.length)];
+  const m = calebMoodBits[Math.floor(Math.random() * calebMoodBits.length)];
+  if (m === "") {
+    return p + o + "。";
+  }
+  return p + o + "，" + m + "。";
+}
+
+// Pre-generate all 100 notes for the overview
+const calebNotes = Array.from({length: 100}, getCalebNote);
 
 // Stars
 const starsEl = document.getElementById('stars');
@@ -710,13 +677,9 @@ const subtitle = document.getElementById('subtitle');
 const answerDisplay = document.getElementById('answerDisplay');
 const calebNote = document.getElementById('calebNote');
 
-let lastAnswerIdx = 0;
-
 askBtn.addEventListener('click', () => {
   const q = questionInput.value.trim();
   if (!q) { questionInput.focus(); return; }
-
-  lastAnswerIdx = Math.floor(Math.random() * answers.length);
 
   questionDisplay.textContent = '— ' + q + ' —';
   subtitle.textContent = '来自答案之书的回应';
@@ -724,7 +687,8 @@ askBtn.addEventListener('click', () => {
   questionDisplay.classList.add('show');
   inputArea.classList.add('hidden');
 
-  answerDisplay.textContent = answers[lastAnswerIdx];
+  const answer = answers[Math.floor(Math.random() * answers.length)];
+  answerDisplay.textContent = answer;
   answerDisplay.classList.remove('show');
   calebNote.classList.remove('show');
 
@@ -734,7 +698,7 @@ askBtn.addEventListener('click', () => {
 
   setTimeout(() => {
     answerDisplay.classList.add('show');
-    calebNote.textContent = calebNotes[lastAnswerIdx];
+    calebNote.textContent = getCalebNote();
     calebNote.classList.add('show');
   }, 800);
 });
